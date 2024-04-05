@@ -4,5 +4,6 @@ node_modules/
 *.config.js
 package.json
 *-lock.json
+*-lock.yaml
 .husky/
 .vscode/
