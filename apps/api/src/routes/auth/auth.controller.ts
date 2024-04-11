@@ -2,10 +2,10 @@ import {
     Body,
     Controller,
     Get,
-    HttpCode,
-    HttpStatus,
+    InternalServerErrorException,
     Post,
-    Request,
+    Res,
+    Req,
     UseGuards,
     UsePipes,
 } from '@nestjs/common';
@@ -13,21 +13,33 @@ import { AuthService } from './auth.service';
 import { SignInDTO, signInSchema } from './dto/sign-in.dto';
 import { ZodValidationPipe } from 'src/common/utils/ZodValidationPipe';
 import { AuthGuard } from './auth.guard';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
 
-    @HttpCode(HttpStatus.OK)
     @UsePipes(new ZodValidationPipe(signInSchema))
     @Post('login')
-    signIn(@Body() signInDTO: SignInDTO) {
-        return this.authService.signIn(signInDTO.username, signInDTO.password);
+    async signIn(
+        @Res({ passthrough: true }) response: Response,
+        @Body() signInDTO: SignInDTO,
+    ) {
+        const res = await this.authService.signIn(
+            signInDTO.username,
+            signInDTO.password,
+        );
+        if (!res.access_token)
+            throw new InternalServerErrorException(
+                "Couldn't create access token",
+            );
+        response.cookie('_msg_jwt', res.access_token);
+        return res;
     }
 
     @UseGuards(AuthGuard)
     @Get('profile')
-    getProfile(@Request() request: Record<string, string>) {
+    getProfile(@Req() request: Record<string, string>) {
         return request.user;
     }
 }
