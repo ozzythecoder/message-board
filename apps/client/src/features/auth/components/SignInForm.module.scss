@@ -1,0 +1,35 @@
+.signInForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+    margin: 1rem 4rem;
+
+    fieldset {
+        position: relative;
+        outline: none;
+        border: none;
+    }
+
+    label {
+        position: absolute;
+        font-size: 0.8rem;
+        top: -1rem;
+        left: 0;
+    }
+
+    input {
+        max-width: 280px;
+    }
+
+    button {
+        background-color: white;
+        border: 1px solid gray;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        padding: 0.2rem 0.8rem;
+        height: 100%;
+        max-width: fit-content;
+    }
+}
