@@ -1,15 +1,31 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import * as schema from 'src/drizzle/schema';
 import { CreateThreadDTO } from './dto/create-thread.dto';
+import * as schema from 'src/drizzle/schema';
+
+type ThreadWithUser = {
+    user: Pick<schema.User, 'username' | 'id'>;
+    thread: schema.Thread;
+};
 
 @Injectable()
 export class ThreadsService {
     constructor(@Inject('DB') private db: PostgresJsDatabase<typeof schema>) {}
 
-    async findAll(): Promise<schema.Thread[]> {
-        const threads = await this.db.query.thread.findMany();
+    async findByTopic(topicID: string): Promise<ThreadWithUser[]> {
+        const threads = await this.db
+            .select({
+                user: {
+                    username: schema.user.username,
+                    id: schema.user.id,
+                },
+                thread: schema.thread,
+            })
+            .from(schema.thread)
+            .where(eq(schema.thread.topicID, topicID))
+            .innerJoin(schema.user, eq(schema.user.id, schema.thread.authorID));
+
         return threads;
     }
 
