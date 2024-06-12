@@ -1,0 +1,18 @@
+.comment_form {
+    form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        width: 30rem;
+
+        .button_row {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: end;
+            align-items: flex-end;
+        }
+    }
+}
