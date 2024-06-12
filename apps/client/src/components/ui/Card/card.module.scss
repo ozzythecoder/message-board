@@ -1,0 +1,12 @@
+.card_content {
+    display: flex;
+    flex-direction: row;
+
+    .sidebar_content {
+        flex: 1;
+    }
+
+    .card_body {
+        flex: 5;
+    }
+}
