@@ -1,3 +1,5 @@
+@use '../styles/colors';
+
 $header-size: 2.5rem;
 
 .heading {
@@ -13,4 +15,11 @@ $header-size: 2.5rem;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    margin: 0.6rem auto;
+
+    a,
+    a:visited {
+        border-radius: 8px;
+        padding: 0.3rem 0.6rem;
+    }
 }
