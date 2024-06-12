@@ -45,18 +45,21 @@ export class ThreadsService {
         return thread[0];
     }
 
-    async create(threadDTO: CreateThreadDTO): Promise<schema.Thread> {
+    async create(threadDTO: CreateThreadDTO): Promise<any> {
+        const newThread: Omit<schema.Thread, 'id'> = {
+            title: threadDTO.title,
+            body: threadDTO.body,
+            authorID: threadDTO.authorID,
+            topicID: threadDTO.topicID,
+            createdAt: new Date(Date.now()).toISOString(),
+            lastReply: new Date(Date.now()).toISOString(),
+            isLocked: false,
+        };
+
         const createThread = await this.db
             .insert(schema.thread)
-            .values({
-                body: threadDTO.body,
-                topicID: threadDTO.topicID,
-                authorID: threadDTO.authorID,
-                lastReply: new Date(Date.now()),
-                createdAt: new Date(Date.now()),
-                isLocked: false,
-            })
-            .returning();
+            .values(newThread)
+            .returning({ id: schema.thread.id });
 
         return createThread[0];
     }
