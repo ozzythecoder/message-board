@@ -1,0 +1,10 @@
+@use '../../../styles/colors';
+
+.Input {
+    background-color: colors.$overlay;
+    color: colors.$text;
+    border: 1px solid colors.$text-muted;
+    border-radius: 5px;
+    padding: 0.5rem;
+    margin: 0.2rem 0;
+}
