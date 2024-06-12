@@ -63,4 +63,10 @@ export class ThreadsService {
 
         return createThread[0];
     }
+
+    async delete(threadID: string) {
+        return await this.db
+            .delete(schema.thread)
+            .where(eq(schema.thread.id, threadID));
+    }
 }
