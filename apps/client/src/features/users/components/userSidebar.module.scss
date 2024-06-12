@@ -1,0 +1,16 @@
+.sidebar_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.user_info {
+    font-weight: 700;
+    color: var(--color-text-half-muted);
+}
+
+.date_posted {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
