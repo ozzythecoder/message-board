@@ -10,7 +10,7 @@ export function TopicsList() {
 
     return (
         <div>
-            <ul>
+            <ul className="flex-col gap-2">
                 {topics.map((t) => (
                     <TopicPreview key={t.id} topic={t} />
                 ))}
