@@ -29,12 +29,20 @@ export class ThreadsService {
         return threads;
     }
 
-    async find(id: string): Promise<schema.Thread> {
-        const thread = await this.db.query.thread.findFirst({
-            where: eq(schema.thread.id, id),
-        });
-        if (!thread) throw new NotFoundException();
-        return thread;
+    async find(id: string): Promise<ThreadWithUser> {
+        const thread = await this.db
+            .select({
+                user: {
+                    username: schema.user.username,
+                    id: schema.user.id,
+                },
+                thread: schema.thread,
+            })
+            .from(schema.thread)
+            .where(eq(schema.thread.id, id))
+            .innerJoin(schema.user, eq(schema.user.id, schema.thread.authorID));
+        if (thread.length === 0) throw new NotFoundException();
+        return thread[0];
     }
 
     async create(threadDTO: CreateThreadDTO): Promise<schema.Thread> {
