@@ -5,6 +5,7 @@ import {
     Param,
     ParseUUIDPipe,
     Post,
+    Query,
     Req,
     UsePipes,
 } from '@nestjs/common';
@@ -16,9 +17,9 @@ import { CreateThreadDTO, createThreadSchema } from './dto/create-thread.dto';
 export class ThreadsController {
     constructor(private threadsService: ThreadsService) {}
 
-    @Get()
-    findAll() {
-        return this.threadsService.findAll();
+    @Get('byTopic')
+    findByTopic(@Query('topicID', ParseUUIDPipe) topicID: string) {
+        return this.threadsService.findByTopic(topicID);
     }
 
     @Get(':id')
