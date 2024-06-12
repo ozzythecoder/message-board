@@ -7,6 +7,9 @@ import { DrizzlePostgresModule } from '@knaadh/nestjs-drizzle-postgres';
 import { ThreadsModule } from './routes/threads/threads.module';
 import { LoggerMiddleware } from './common/middleware/LoggerMiddleware';
 import { AuthModule } from './routes/auth/auth.module';
+import { TopicsService } from './routes/topics/topics.service';
+import { TopicsModule } from './routes/topics/topics.module';
+import { CommentsModule } from './routes/comments/comments.module';
 
 @Module({
     imports: [
@@ -28,7 +31,10 @@ import { AuthModule } from './routes/auth/auth.module';
         }),
         ThreadsModule,
         AuthModule,
+        TopicsModule,
+        CommentsModule,
     ],
+    providers: [TopicsService],
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
