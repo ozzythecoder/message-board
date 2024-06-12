@@ -1,16 +1,23 @@
-* {
-    margin: 0;
-    padding: 0;
-}
+@use './colors';
+@use './padding';
+@use './utils';
+@use './reset';
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
+html {
+    --color-text: #{colors.$text};
+    --color-text-muted: #{colors.$text-muted};
+    --color-text-half-muted: #{colors.$text-half-muted};
+    --color-background: #{colors.$background};
+    --color-overlay: #{colors.$overlay};
+    --color-primary: #{colors.$primary};
+    --color-primary-light: #{colors.$primary-light};
+    --color-secondary: #{colors.$secondary};
+    --color-accent: #{colors.$accent};
+    --color-accent-light: #{colors.$accent-light};
 }
 
 body {
-    background-color: rgb(20, 20, 28);
+    background-color: colors.$background;
     font-family:
         system-ui,
         -apple-system,
@@ -23,37 +30,11 @@ body {
         'Open Sans',
         'Helvetica Neue',
         sans-serif;
-    color: rgb(240, 240, 240);
+    color: colors.$text;
 
     :not(h1, h2, h3) {
         line-height: 1.5;
     }
-}
-
-img,
-picture,
-video,
-canvas,
-svg {
-    display: block;
-    max-width: 100%;
-}
-
-input,
-button,
-textarea,
-select {
-    font: inherit;
-}
-
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    overflow-wrap: break-word;
 }
 
 hr {
@@ -61,24 +42,31 @@ hr {
     width: 100%;
 }
 
-#root {
-    isolation: isolate;
-}
-
 a,
 a:visited {
-    color: rgb(100, 100, 255);
+    color: colors.$primary;
     font-weight: bold;
     text-decoration: none;
-    border-radius: 8px;
-    padding: 0.3rem 0.6rem;
 
     &:hover {
-        color: rgb(180, 180, 255);
-        background-color: rgb(255, 255, 255, 0.1);
+        color: colors.$primary-light;
+        background-color: colors.$overlay;
     }
 
     &:active {
         color: white;
+    }
+}
+
+ul {
+    list-style: none;
+    padding: 0.5rem;
+}
+
+button {
+    cursor: pointer;
+
+    :disabled {
+        cursor: not-allowed;
     }
 }

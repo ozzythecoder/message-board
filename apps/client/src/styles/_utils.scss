@@ -1,0 +1,33 @@
+@use './colors';
+
+.bg_overlay {
+    background-color: colors.$overlay;
+}
+
+.text {
+    color: colors.$text;
+}
+
+.text_muted {
+    color: colors.$text_muted;
+}
+
+.text_primary {
+    color: colors.$primary;
+}
+
+.text_primary_light {
+    color: colors.$primary_light;
+}
+
+.text_secondary {
+    color: colors.$secondary;
+}
+
+.text_accent {
+    color: colors.$accent;
+}
+
+.text_accent_light {
+    color: colors.$accent_light;
+}
