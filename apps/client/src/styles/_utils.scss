@@ -5,7 +5,7 @@
 }
 
 .text {
-    color: colors.$text;
+    color: var(--color-text);
 }
 
 .text_muted {
@@ -30,4 +30,22 @@
 
 .text_accent_light {
     color: colors.$accent_light;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.gap-2 {
+    gap: 1rem;
+}
+
+.no_weight {
+    font-weight: 400;
 }
