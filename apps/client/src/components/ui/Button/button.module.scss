@@ -1,0 +1,14 @@
+@use '../../../styles/colors';
+
+.Button {
+    color: colors.$text;
+    max-width: 120px;
+    background-color: colors.$overlay;
+    border: 1px solid colors.$text-muted;
+    border-radius: 5px;
+    padding: 0.3rem 0.8rem;
+
+    &:hover {
+        border-color: colors.$text;
+    }
+}
