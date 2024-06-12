@@ -10,7 +10,7 @@ export function ThreadsList({ topicID }: { topicID: string }) {
 
     return (
         <div>
-            <ul>
+            <ul className="flex-col gap-2">
                 {data.map((t) => (
                     <ThreadPreview key={t.thread.id} data={t} />
                 ))}
