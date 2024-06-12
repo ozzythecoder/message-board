@@ -1,97 +1,92 @@
-import { InferSelectModel, relations } from 'drizzle-orm';
+import { InferSelectModel } from 'drizzle-orm';
 import {
-    boolean,
-    index,
     pgTable,
-    text,
-    timestamp,
+    index,
+    unique,
     uuid,
     varchar,
+    text,
+    timestamp,
+    boolean,
 } from 'drizzle-orm/pg-core';
 
 export const user = pgTable(
     'auth_user',
     {
-        id: uuid('id').primaryKey().notNull().defaultRandom(),
+        id: uuid('id').defaultRandom().primaryKey().notNull(),
         firstName: varchar('first_name', { length: 40 }),
         lastName: varchar('last_name', { length: 40 }),
-        username: varchar('username', { length: 32 }).notNull().unique(),
+        username: varchar('username', { length: 32 }).notNull(),
         email: varchar('email').notNull(),
         password: text('password').notNull(),
-        dateJoined: timestamp('date_joined').defaultNow().notNull(),
+        dateJoined: timestamp('date_joined', { mode: 'string' })
+            .defaultNow()
+            .notNull(),
     },
-    (user) => ({
-        idIdx: index('id_idx').on(user.id),
-    }),
+    (table) => {
+        return {
+            id_idx: index('id_idx').using('btree', table.id),
+            auth_user_username_unique: unique('auth_user_username_unique').on(
+                table.username,
+            ),
+        };
+    },
 );
 
-export const userOptions = pgTable('user_options', {
-    id: uuid('id').primaryKey().notNull().defaultRandom(),
-    userId: uuid('user_id').references(() => user.id),
-    profilePictureUrl: varchar('profile_picture_url', { length: 300 }),
-});
-
-export const userRelations = relations(user, ({ one, many }) => ({
-    options: one(userOptions),
-    posts: many(post),
-    threads: many(thread),
-    notifications: many(notification),
-}));
-
-export const topic = pgTable('topic', {
-    id: uuid('id').primaryKey().notNull().defaultRandom(),
-    title: varchar('title', { length: 48 }).notNull(),
-    description: varchar('description', { length: 256 }).notNull(),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-export const topicRelations = relations(topic, ({ many }) => ({
-    threads: many(thread),
-}));
-
-export const thread = pgTable('thread', {
-    id: uuid('id').primaryKey().notNull().defaultRandom(),
-    authorID: uuid('author_id').references(() => user.id), // references user
-    topicID: uuid('topic_id').references(() => topic.id), // references topic
-    body: varchar('body', { length: 5000 }).notNull(),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
-    lastReply: timestamp('last_reply').notNull(),
-    isLocked: boolean('is_locked').default(false).notNull(),
-});
-
-export const threadRelations = relations(thread, ({ one, many }) => ({
-    author: one(user),
-    topic: one(topic),
-    posts: many(post),
-}));
-
-export const post = pgTable('post', {
-    id: uuid('id').primaryKey().notNull().defaultRandom(),
-    authorID: uuid('author_id').references(() => user.id), // references user
-    threadID: uuid('thread_id').references(() => thread.id), // references thread
-    body: varchar('body', { length: 5000 }).notNull(),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-export const postRelations = relations(post, ({ one }) => ({
-    author: one(user),
-    thread: one(thread),
-}));
-
 export const notification = pgTable('notification', {
-    id: uuid('id').primaryKey().notNull().defaultRandom(),
-    userId: uuid('user_id').references(() => user.id),
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    userID: uuid('user_id').references(() => user.id),
     title: varchar('title', { length: 50 }),
-    datetime: timestamp('datetime').defaultNow().notNull(),
+    datetime: timestamp('datetime', { mode: 'string' }).defaultNow().notNull(),
     isRead: boolean('is_read').default(false).notNull(),
 });
 
-export const notificationRelations = relations(notification, ({ one }) => ({
-    user: one(user),
-}));
+export const topic = pgTable('topic', {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    title: varchar('title', { length: 48 }).notNull(),
+    description: varchar('description', { length: 256 }).notNull(),
+    createdAt: timestamp('created_at', { mode: 'string' })
+        .defaultNow()
+        .notNull(),
+});
+
+export const userOptions = pgTable('user_options', {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    userID: uuid('user_id').references(() => user.id),
+    profilePictureUrl: varchar('profile_picture_url', { length: 300 }),
+});
+
+export const thread = pgTable('thread', {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    authorID: uuid('author_id')
+        .references(() => user.id)
+        .notNull(),
+    topicID: uuid('topic_id')
+        .references(() => topic.id)
+        .notNull(),
+    body: varchar('body', { length: 5000 }).notNull(),
+    createdAt: timestamp('created_at', { mode: 'string' })
+        .defaultNow()
+        .notNull(),
+    lastReply: timestamp('last_reply', { mode: 'string' })
+        .defaultNow()
+        .notNull(),
+    isLocked: boolean('is_locked').default(false).notNull(),
+    title: varchar('title', { length: 300 }).notNull(),
+});
+
+export const comment = pgTable('comment', {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    authorID: uuid('author_id').references(() => user.id),
+    threadID: uuid('thread_id').references(() => thread.id),
+    body: varchar('body', { length: 5000 }).notNull(),
+    createdAt: timestamp('created_at', { mode: 'string' })
+        .defaultNow()
+        .notNull(),
+});
 
 export type User = InferSelectModel<typeof user>;
-export type Topic = InferSelectModel<typeof topic>;
-export type Thread = InferSelectModel<typeof thread>;
-export type Post = InferSelectModel<typeof post>;
 export type Notification = InferSelectModel<typeof notification>;
+export type Thread = InferSelectModel<typeof thread>;
+export type Topic = InferSelectModel<typeof topic>;
+export type Comment = InferSelectModel<typeof comment>;
