@@ -1,30 +1,44 @@
 import style from './card.module.scss';
-import clsx from 'clsx';
+import { cva, type VariantProps } from 'class-variance-authority';
 
-type CardProps = SidebarState & {
-    children?: React.ReactNode;
-    className?: string;
-};
+const card = cva(style.card_content, {
+    variants: {
+        border: {
+            none: null,
+            thin: style.border_thin,
+            thick: style.border_thick,
+        },
+    },
+    defaultVariants: {
+        border: 'none',
+    },
+});
 
-type SidebarState =
-    | {
-          sidebar: true;
-          renderSidebarContent: () => JSX.Element;
-      }
-    | {
-          sidebar?: false | undefined;
-          renderSidebarContent?: never;
-      };
+export interface CardProps
+    extends React.HTMLAttributes<HTMLDivElement>,
+        VariantProps<typeof card> {
+    title?: string;
+    renderSidebarContent?: () => JSX.Element;
+}
 
-export function Card(props: CardProps) {
-    const sidebarContent = props.sidebar ? props.renderSidebarContent() : null;
+export function Card({
+    renderSidebarContent,
+    title,
+    border,
+    className,
+    ...props
+}: CardProps) {
+    const sidebarContent = renderSidebarContent ? renderSidebarContent() : null;
 
     return (
-        <div className={clsx(style.card_content, props.className)}>
+        <div className={card({ border, className })} {...props}>
             {sidebarContent && (
                 <div className={style.sidebar_content}>{sidebarContent}</div>
             )}
-            <div className={style.card_body}>{props.children}</div>
+            <div className={style.card_body}>
+                {title && <h2 className={style.card_title}>{title}</h2>}
+                {props.children}
+            </div>
         </div>
     );
 }
