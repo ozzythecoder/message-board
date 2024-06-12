@@ -13,23 +13,47 @@ import { createFileRoute } from '@tanstack/react-router';
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root';
+import { Route as ColorsImport } from './routes/colors';
+import { Route as TopicsIndexImport } from './routes/topics/index';
+import { Route as TopicsTopicIDIndexImport } from './routes/topics/$topicID/index';
+import { Route as ThreadsThreadIDIndexImport } from './routes/threads/$threadID/index';
 
 // Create Virtual Routes
 
-const AboutLazyImport = createFileRoute('/about')();
+const SigninLazyImport = createFileRoute('/signin')();
 const IndexLazyImport = createFileRoute('/')();
 
 // Create/Update Routes
 
-const AboutLazyRoute = AboutLazyImport.update({
-    path: '/about',
+const SigninLazyRoute = SigninLazyImport.update({
+    path: '/signin',
     getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route));
+} as any).lazy(() => import('./routes/signin.lazy').then((d) => d.Route));
+
+const ColorsRoute = ColorsImport.update({
+    path: '/colors',
+    getParentRoute: () => rootRoute,
+} as any);
 
 const IndexLazyRoute = IndexLazyImport.update({
     path: '/',
     getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route));
+
+const TopicsIndexRoute = TopicsIndexImport.update({
+    path: '/topics/',
+    getParentRoute: () => rootRoute,
+} as any);
+
+const TopicsTopicIDIndexRoute = TopicsTopicIDIndexImport.update({
+    path: '/topics/$topicID/',
+    getParentRoute: () => rootRoute,
+} as any);
+
+const ThreadsThreadIDIndexRoute = ThreadsThreadIDIndexImport.update({
+    path: '/threads/$threadID/',
+    getParentRoute: () => rootRoute,
+} as any);
 
 // Populate the FileRoutesByPath interface
 
@@ -39,8 +63,24 @@ declare module '@tanstack/react-router' {
             preLoaderRoute: typeof IndexLazyImport;
             parentRoute: typeof rootRoute;
         };
-        '/about': {
-            preLoaderRoute: typeof AboutLazyImport;
+        '/colors': {
+            preLoaderRoute: typeof ColorsImport;
+            parentRoute: typeof rootRoute;
+        };
+        '/signin': {
+            preLoaderRoute: typeof SigninLazyImport;
+            parentRoute: typeof rootRoute;
+        };
+        '/topics/': {
+            preLoaderRoute: typeof TopicsIndexImport;
+            parentRoute: typeof rootRoute;
+        };
+        '/threads/$threadID/': {
+            preLoaderRoute: typeof ThreadsThreadIDIndexImport;
+            parentRoute: typeof rootRoute;
+        };
+        '/topics/$topicID/': {
+            preLoaderRoute: typeof TopicsTopicIDIndexImport;
             parentRoute: typeof rootRoute;
         };
     }
@@ -50,7 +90,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
     IndexLazyRoute,
-    AboutLazyRoute,
+    ColorsRoute,
+    SigninLazyRoute,
+    TopicsIndexRoute,
+    ThreadsThreadIDIndexRoute,
+    TopicsTopicIDIndexRoute,
 ]);
 
 /* prettier-ignore-end */
