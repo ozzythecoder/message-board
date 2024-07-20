@@ -6,7 +6,7 @@ import { Card } from 'src/components/ui';
 export function ThreadContent({ data }: { data: ApiThreadResponse }) {
     return (
         <Card
-            renderSidebarContent={() => (
+            sidebar={() => (
                 <UserSidebar
                     username={data.user.username}
                     datePosted={data.thread.createdAt}

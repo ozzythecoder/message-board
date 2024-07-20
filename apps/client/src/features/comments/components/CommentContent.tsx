@@ -8,14 +8,13 @@ export function CommentContent({ data }: { data: ApiCommentResponse }) {
 
     return (
         <Card
-            sidebar={true}
-            renderSidebarContent={() => (
+            className={style.post_content}
+            sidebar={() => (
                 <div className={style.user_info}>
                     <p>{data.user.username}</p>
                     <p className={style.date_posted}>{createdAt}</p>
                 </div>
             )}
-            className={style.post_content}
         >
             <div className={style.post_body}>
                 <p>{data.comment.body}</p>

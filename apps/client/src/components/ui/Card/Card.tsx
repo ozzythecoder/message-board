@@ -18,27 +18,25 @@ export interface CardProps
     extends React.HTMLAttributes<HTMLDivElement>,
         VariantProps<typeof card> {
     title?: string;
-    renderSidebarContent?: () => JSX.Element;
+    sidebar?: () => JSX.Element;
 }
 
-export function Card({
-    renderSidebarContent,
-    title,
-    border,
-    className,
-    ...props
-}: CardProps) {
-    const sidebarContent = renderSidebarContent ? renderSidebarContent() : null;
+const CardSidebar = ({ content }: { content: JSX.Element }) => {
+    return <div className={style.sidebar_content}>{content}</div>;
+};
 
+function Card({ title, border, className, sidebar, ...props }: CardProps) {
     return (
         <div className={card({ border, className })} {...props}>
-            {sidebarContent && (
-                <div className={style.sidebar_content}>{sidebarContent}</div>
-            )}
+            {sidebar && <CardSidebar content={sidebar()} />}
             <div className={style.card_body}>
-                {title && <h2 className={style.card_title}>{title}</h2>}
-                {props.children}
+                <>
+                    {title && <h2 className={style.card_title}>{title}</h2>}
+                    {props.children}
+                </>
             </div>
         </div>
     );
 }
+
+export { Card };
